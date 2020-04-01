@@ -11,13 +11,12 @@ LOG = logging.getLogger(__name__)
 
 
 def create_app():
-    app = None
 
-    try:
+    app = Flask(__name__)
+    if os.getenv("PMATCHER_CONFIG") is not None:
         LOG.info("Configuring app from environment variable")
-        app = Flask(__name__)
         app.config.from_envvar("PMATCHER_CONFIG")
-    except:
+    else:
         LOG.warning(
             "Environment variable settings not found, configuring from instance file."
         )
