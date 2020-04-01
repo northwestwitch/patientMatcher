@@ -28,6 +28,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install -r requirements-dev.txt
+        pip install git+https://github.com/Clinical-Genomics/patient-similarity
     - name: Lint with flake8
       run: |
         pip install flake8
