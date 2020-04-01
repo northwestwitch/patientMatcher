@@ -13,9 +13,6 @@ jobs:
         
     steps:
 
-    # Check out code
-    - uses: actions/checkout@v1
-
     # Set up python
     - name: Set up Python ${{ matrix.python-version}}
       uses: actions/setup-python@v1
