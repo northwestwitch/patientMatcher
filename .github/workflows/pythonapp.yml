@@ -42,8 +42,6 @@ jobs:
         pip check
     
     - name: Test with pytest
-      env:
-        COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
       run: |
         py.test -rxs --cov=patientMatcher tests/
         coveralls
