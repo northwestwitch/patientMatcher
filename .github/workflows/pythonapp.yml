@@ -1,50 +1,38 @@
-name: PatienMatcher tests
+# This workflow will install Python dependencies, run tests and lint with a variety of Python versions
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
 
-on: push 
+name: Python package
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
 
 jobs:
   build:
-  
+
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.6, 3.7]
-        mongodb-version: ["3.6", "4.0"]
-        
+        python-version: [3.6, 3.7, 3.8]
+
     steps:
-
-    # Check out code
-    - uses: actions/checkout@v1
-
-    # Set up python
-    - name: Set up Python ${{ matrix.python-version}}
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v1
       with:
-        python-version: ${{ matrix.python-version}}
-
-    # Set up mongodb
-    - name: Start MongoDB
-      uses: wbari/start-mongoDB@v0.2
-      with:
-        mongoDBVersion: ${{ matrix.mongodb-version}}
-        
-    - name: Production Dependencies
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install git+https://github.com/Clinical-Genomics/patient-similarity
-        pip install -e .
-        pip check
-    
-    - name: Development Dependencies
-      run: |
+        pip install -r requirements.txt
         pip install -r requirements-dev.txt
-        pip install flake8
-        pip check
-    
-    - name: Test with pytest
-      env:
-        COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+        pip install git+https://github.com/Clinical-Genomics/patient-similarity
+    - name: Lint with flake8
       run: |
-        py.test -rxs --cov=patientMatcher tests/
-        coveralls
-    
+        pip install flake8
+        # stop the build if there are Python syntax errors or undefined names
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        # exit-zero treats all errors as warnings.
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=100 --statistics
